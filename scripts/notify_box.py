@@ -25,8 +25,9 @@ def main():
     run_id    = os.environ.get('GITHUB_RUN_ID', '')
     run_url   = f'https://github.com/{repo}/actions/runs/{run_id}'
 
-    with open('slack_summary.txt', encoding='utf-8') as f:
-        summary = f.read()
+    # ファイルではなく環境変数から読む ← ここを変更
+    summary = os.environ.get("SLACK_SUMMARY", "（サマリーなし）")
+
 
     lines = [f'- {l.strip().lstrip("- ")}' for l in summary.split('\n')
              if l.strip() and not l.strip().startswith('#')][:6]
