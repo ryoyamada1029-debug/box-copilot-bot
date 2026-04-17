@@ -31,6 +31,7 @@ jobs:
           BOX_ENTERPRISE_ID: ${{ secrets.BOX_ENTERPRISE_ID }}
           BOX_PRIVATE_KEY: ${{ secrets.BOX_PRIVATE_KEY }}
           BOX_KEY_ID: ${{ secrets.BOX_KEY_ID }}
+          BOX_PRIVATE_KEY_PASSPHRASE: ${{ secrets.BOX_PRIVATE_KEY_PASSPHRASE }}   # ← 追加
           BOX_WATCH_FOLDER_ID: ${{ secrets.BOX_WATCH_FOLDER_ID }}
           FILE_ID: ${{ github.event.inputs.file_id }}
         run: python scripts/fetch_box_doc.py
