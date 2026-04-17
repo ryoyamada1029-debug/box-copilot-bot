@@ -4,13 +4,14 @@ from boxsdk import JWTAuth, Client
 
 def get_box_client():
     private_key = os.environ['BOX_PRIVATE_KEY'].replace('\\n', '\n')
+    passphrase = os.environ.get("BOX_PRIVATE_KEY_PASSPHRASE", "") # ← 追加
     config = JWTAuth(
         client_id=os.environ['BOX_CLIENT_ID'],
         client_secret=os.environ['BOX_CLIENT_SECRET'],
         enterprise_id=os.environ['BOX_ENTERPRISE_ID'],
         jwt_key_id=os.environ['BOX_KEY_ID'],
         rsa_private_key_data=private_key,
-        rsa_private_key_passphrase=None,
+        rsa_private_key_passphrase=passphrase.encode("utf-8") if passphrase else None, # ← 修正
     )
     return Client(config)
 
