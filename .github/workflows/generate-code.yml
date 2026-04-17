@@ -41,6 +41,14 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/generate_code.py
 
+      # ↓ この1ステップを追加する
+      - name: Save summary to env
+        run: |
+          SUMMARY=$(cat slack_summary.txt)
+          echo "SLACK_SUMMARY<<EOF" >> $GITHUB_ENV
+          echo "$SUMMARY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Create Pull Request
         id: pr
         uses: peter-evans/create-pull-request@v6
