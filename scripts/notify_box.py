@@ -1,4 +1,5 @@
 import os
+import io  # ← 追加
 from datetime import datetime, timezone
 from boxsdk import JWTAuth, Client
 
@@ -58,11 +59,15 @@ def main():
 '''
 
     client = get_box_client()
-    client.folder(os.environ['BOX_NOTIFY_FOLDER_ID']).upload_stream(
-        file_stream=content.encode('utf-8'),
+    folder = client.folder(os.environ["BOX_NOTIFY_FOLDER_ID"])
+    
+    # bytes → BytesIOに変更
+    file_stream = io.BytesIO(content.encode("utf-8"))
+    folder.upload_stream(
+        file_stream=file_stream,
         file_name=filename,
     )
-    print(f'Box通知完了: {filename}')
+    print(f"Box通知完了: {filename}")
 
 if __name__ == '__main__':
     main()
