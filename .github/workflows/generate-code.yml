@@ -1,8 +1,8 @@
 name: Box Doc => Code Generator
 
 on:
-  schedule:
-    - cron: '0 9 * * 1-5'   # 平日の朝9時（UTC）に自動実行
+  # schedule:
+  #   - cron: '0 9 * * 1-5'   # 平日の朝9時（UTC）に自動実行
   workflow_dispatch:          # 手動でも実行できるようにする
     inputs:
       file_id:
