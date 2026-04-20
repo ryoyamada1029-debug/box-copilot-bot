@@ -1,6 +1,8 @@
 import os, json
+import io
 from datetime import datetime, timedelta, timezone
 from boxsdk import JWTAuth, Client
+from docx import Document as DocxDocument
 
 def get_box_client():
     private_key = os.environ['BOX_PRIVATE_KEY'].replace('\\n', '\n')
@@ -14,6 +16,12 @@ def get_box_client():
         rsa_private_key_passphrase=passphrase.encode("utf-8") if passphrase else None,
     )
     return Client(config)
+
+def extract_text_from_docx(binary_content):
+    """docxバイナリからプレーンテキストを抽出する"""
+    doc = DocxDocument(io.BytesIO(binary_content))
+    paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
+    return "\n".join(paragraphs)
 
 def main():
     client = get_box_client()
@@ -41,9 +49,19 @@ def main():
             f.write('NO_FILES=true\n')
         return
 
+    # target = files[0]
+    # content = client.file(target.id).content().decode('utf-8', errors='replace')
+    
     target = files[0]
-    content = client.file(target.id).content().decode('utf-8', errors='replace')
+    binary = client.file(target.id).content()  # bytesのまま受け取る
 
+    # 拡張子に応じてテキスト抽出方法を切り替え
+    if target.name.lower().endswith(".docx"):
+        content = extract_text_from_docx(binary)
+    else:
+        content = binary.decode("utf-8", errors="replace")
+
+    
     with open('doc_content.txt', 'w', encoding='utf-8') as f:
         f.write(content)
 
